@@ -24,7 +24,6 @@ $ roslaunch cv_cam cv_cam.launch
 + width: image width
 + height: image height
 + fps: image frame per second
-<br>
 + white_balance: control white balance  => 0:off, 1:auto(default)
 + noise_reduction: controll image noise => 0:off, 1:Fast(default), 2:High Quality
 + edge_enhance: control contour         => 0:off, 1:Fast(default), 2:High Quality
