@@ -1,36 +1,25 @@
 # cv_cam_ros
 
 ***
-setting guide for Nvidia Xavier NX (arm architecture)
-# Index
-### 0. OpenCV (ver. 3.4.1) install 
-### 1. Intel Realsense camera: D435i
-### 2. CSI camera: IMX477
-### 3. Teamviewer for arm-architecture
+ROS package read image from CSI camera and publish ROS sensor image topic, using OpenCV 3.4.1 and gstreamer.<br>
++ camera: IMX477 HQ RPI V1.0 (any CSI camera using gstramer will be available, but not tested yet) 
++ image topic name: /imx477/image_raw
 ***
 <br><br>
 
-## 0. OpenCV (ver. 3.4.1) install 
-from [engcang](https://github.com/engcang/vins-application#-opencv-with-cuda--necessary-for-gpu-version-1)
-+ for Xavier NX, CUDA_ARCH_BIN = 7.2 
-+ when patch using **test.patch**
+## Build
 ```
-$ mv test.patch ~<opencv directory>/opencv-3.4.1/modulest/core/include/opencv2/core/
-$ patch -N cvdef.h test.patch
-```
-
-## 1. Intel Realsense camera: D435i
-from [IntelRealSense](https://github.com/IntelRealSense/librealsense/blob/master/doc/installation.md)
-+ **my version info**
-    + SDK - 2.36.0
-    + Firmware: 5.12.6.0
-
-
-+ **Download the complete source tree with git**
-```
-$ git clone https://github.com/IntelRealSense/librealsense.git
+$ git clone https://github.com/zinuok/cv_cam_ros.git
+$ cd ~/catkin_ws
+$ catkin build cv_cam
+$ source ~/catkin_ws/devel/setup.bash
 ```
 
-+ **Download and unzip the latest stable version from [here](https://github.com/IntelRealSense/librealsense/releases)**
+## Run
+```
+$ roslaunch cv_cam cv_cam.launch
+```
 
-+ **unzip**
+## Parameter launch file
+
+
