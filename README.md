@@ -21,13 +21,12 @@ $ roslaunch cv_cam cv_cam.launch
 ```
 
 ## Parameters in launch file
-+ width: image width
-+ height: image height
-+ fps: image frame per second
-+ white_balance: control white balance  => 0:off, 1:auto(default)
-+ noise_reduction: controll image noise => 0:off, 1:Fast(default), 2:High Quality
-+ edge_enhance: control contour         => 0:off, 1:Fast(default), 2:High Quality
++ **width**: image width
++ **height**: image height
++ **fps**: image frame per second
++ **white_balance**: control white balance  => 0:off, 1:auto(default)
++ **noise_reduction**: controll image noise => 0:off, 1:Fast(default), 2:High Quality
++ **edge_enhance**: control contour         => 0:off, 1:Fast(default), 2:High Quality
 
-<br><br>
 For image (width, height, fps), possible combinations of values are set by gstreamer.<br>
 ex) (width, height, fps) = (1920, 1080, 30)   (640, 480, 30)  etc..
