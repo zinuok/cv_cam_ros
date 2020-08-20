@@ -1,7 +1,7 @@
 # cv_cam_ros
 
 ***
-ROS package read live images from CSI camera and publish ROS sensor image topic, using OpenCV 3.4.1 and gstreamer.<br>
+This ROS package is based on OpenCV 3.4.1 and gstreamer, reading live images from CSI camera and publishing ROS sensor image topic.<br>
 + **camera:** IMX477 HQ RPI V1.0 (any CSI camera using gstramer will be available, but not tested yet) 
 + **image topic name:** /imx477/image_raw
 ***
