@@ -10,7 +10,6 @@
 #include <sensor_msgs/image_encodings.h>
 #include <cv_bridge/cv_bridge.h>
 
-#include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <string>
 #include <chrono> 
@@ -23,18 +22,19 @@ void signal_handler(sig_atomic_t s) {
 
 using namespace std::chrono; 
 using namespace std;
-using namespace boost;
 
+cv::Mat frame;
 cv_bridge::CvImage img_bridge;
 sensor_msgs::Image img_msg;
 std_msgs::Header header;
 int counter = 1;
 
+stringstream camSetstream; //temp stream
+string camSet;
+
 // ROS parameter
 int width, height, fps;
-int white_balance, noise_reduction, edge_enhance;
-
-double contrast, brightness, saturation;
+string options;
 
 /* --------------- notice ------------------- *//*
 
@@ -46,9 +46,9 @@ camSet = "nvarguscamerasrc sensor-id=0 tnr-mode=1 wbmode=1 ! video/x-raw(memory:
 
 #cam = cv2.VideoCapture(camSet)
 
-
 // #when using other codec
-// ''' test-> v4l2-ctl -d /dev/video1 --list-formats-ext '''
+// test :  v4l2-ctl -d /dev/video1 --list-formats-ext
+// test : gst-inspect-1.0 nvarguscamerasrc
 // # cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'H264'))
 // # cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
 // # cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920);
@@ -58,24 +58,17 @@ camSet = "nvarguscamerasrc sensor-id=0 tnr-mode=1 wbmode=1 ! video/x-raw(memory:
 *//* ------------------------------------------ */
 
 
-
 string img_config(ros::NodeHandle nh){
-    
+    const string none = " ";
     nh.param("cv_cam_node/width", width, 1920);
     nh.param("cv_cam_node/height", height, 1080);
     nh.param("cv_cam_node/fps", fps, 30);
-    nh.param("cv_cam_node/white_balance", white_balance, 1);
-    nh.param("cv_cam_node/noise_reduction", noise_reduction, 1);
-    nh.param("cv_cam_node/edge_enhance", edge_enhance, 1);
+    nh.param("cv_cam_node/options", options, none);
     
-    stringstream camSet;
-    camSet << "nvarguscamerasrc sensor-id=0 tnr-mode=" << noise_reduction << " wbmode=" << white_balance << " ee-mode=" << edge_enhance << " ! video/x-raw(memory:NVMM), width=" << width << ", height=" << height << ", framerate=" << fps << "/1, format=NV12' ! nvvidconv flip-method=2 ! video/x-raw, width=" << width << ", height=" << height << ", format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink";  
+    camSetstream << "nvarguscamerasrc sensor-id=0 " << options << " ! video/x-raw(memory:NVMM), width=" << width << ", height=" << height << ", framerate=" << fps << "/1, format=NV12' ! nvvidconv flip-method=2 ! video/x-raw, width=" << width << ", height=" << height << ", format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink";  
 
-    return camSet.str();
-    
+    return camSetstream.str();
 }
-
-
 
 
 int main(int argc, char **argv){
@@ -90,19 +83,15 @@ int main(int argc, char **argv){
     signal(SIGINT, signal_handler); // to exit program when ctrl+c
 
     // image set
-    string camSet = img_config(nh);
+    camSet = img_config(nh);
     cv::VideoCapture cam(camSet); //, cv::CAP_GSTREAMER); 
     cam.set(CV_CAP_PROP_FOURCC, cv::VideoWriter::fourcc('H','2','6','4'));
     cam.set(CV_CAP_PROP_FRAME_WIDTH, width);
     cam.set(CV_CAP_PROP_FRAME_HEIGHT, height);
     cam.set(CV_CAP_PROP_FPS, fps);
     
-    cv::Mat frame;   
 	while (true){
-        auto start = high_resolution_clock::now(); 
         cam >> frame;
-        auto stop = high_resolution_clock::now(); 
-        auto duration = duration_cast<microseconds>(stop - start);
         //ROS_INFO("row : %d col : %d time : %.2f", frame.rows, frame.cols, duration.count()/1000.0);
         
         header.seq = counter;
@@ -114,9 +103,7 @@ int main(int argc, char **argv){
 
         rate.sleep();
     }
-
 	cam.release();
 	cv::destroyAllWindows();
-
 	return 0;
 }

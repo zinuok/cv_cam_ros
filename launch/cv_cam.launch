@@ -1,21 +1,13 @@
 <launch>
 
-
 <node name="cv_cam_node" pkg="cv_cam" type="cv_cam_node" output="screen">
     <!-- Image characteristics -->
 	<param name="width" value="1920" /> 
     <param name="height" value="1080" />
     <param name="fps" value="30" />
 
-    <!-- Image quality -->
-    <param name="white_balance" value="0" />   <!-- 0:off, 1:auto(default) -->
-    <param name="noise_reduction" value="0" /> <!-- 0:off, 1:Fast(default), 2:High Quality -->
-    <param name="edge_enhance" value="0" />    <!-- 0:off, 1:Fast(default), 2:High Qual -->
-    
-    <!-- these options are not used -->
-    <param name="contrast" value="1" />      <!-- value: 0 ~ 2 -->
-    <param name="brightness" value="1" />    <!-- value: -1 ~ 1 -->
-    <param name="saturation" value="1" />    <!-- value: 0 ~ 2 -->
+    <!-- Image quality options -->
+    <param name="options" value="exposuretimerange=low exposurecompensation=2 tnr-mode=1 wbmode=0 ee-mode=2" />
 
 </node>
 
